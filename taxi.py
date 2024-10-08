@@ -23,7 +23,9 @@ import gymnasium as gym
 import numpy as np
 from qlearning import QLearningAgent
 from qlearning_eps_scheduling import QLearningAgentEpsScheduling
-from sarsa import SARSAAgent
+from sarsa import SarsaAgent
+
+from gymnasium.wrappers import RecordVideo
 
 
 env = gym.make("Taxi-v3", render_mode="rgb_array")
@@ -35,7 +37,7 @@ n_actions = env.action_space.n  # type: ignore
 #################################################
 
 agent = QLearningAgent(
-    learning_rate=0.5, epsilon=0.25, gamma=0.99, legal_actions=list(range(n_actions))
+    learning_rate=0.5, epsilon=0.1, gamma=0.99, legal_actions=list(range(n_actions)) # It was 0.25 at first for epsilon
 )
 
 
@@ -55,12 +57,23 @@ def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float
 
         next_s, r, done, _, _ = env.step(a)
 
-        # Train agent for state s
         # BEGIN SOLUTION
+        # Update the Q-values of the agent based on the action taken and the reward
+        agent.update(s, a, r, next_s)
+
+        # Accumulate the reward
+        total_reward += r
+
+        # Transition to the next state
+        s = next_s
+
+        if done:
+            break
         # END SOLUTION
 
     return total_reward
 
+env = RecordVideo(gym.make("Taxi-v3", render_mode="rgb_array"), "./videos/")
 
 rewards = []
 for i in range(1000):
@@ -69,12 +82,12 @@ for i in range(1000):
         print("mean reward", np.mean(rewards[-100:]))
 
 assert np.mean(rewards[-100:]) > 0.0
-# TODO: créer des vidéos de l'agent en action
 
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
 #################################################
 
+env = RecordVideo(gym.make("Taxi-v3", render_mode="rgb_array"), "./videos/")
 
 agent = QLearningAgentEpsScheduling(
     learning_rate=0.5, epsilon=0.25, gamma=0.99, legal_actions=list(range(n_actions))
@@ -88,18 +101,18 @@ for i in range(1000):
 
 assert np.mean(rewards[-100:]) > 0.0
 
-# TODO: créer des vidéos de l'agent en action
-
-
 ####################
 # 3. Play with SARSA
 ####################
 
+env = RecordVideo(gym.make("Taxi-v3", render_mode="rgb_array"), "./videos/")
 
-agent = SARSAAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
+agent = SarsaAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
 
-rewards = []
-for i in range(1000):
-    rewards.append(play_and_train(env, agent))
-    if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+# rewards = []
+# for i in range(1000):
+#     rewards.append(play_and_train(env, agent))
+#     if i % 100 == 0:
+#         print("mean reward", np.mean(rewards[-100:]))
+
+env.close()

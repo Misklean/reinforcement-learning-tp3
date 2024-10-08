@@ -43,6 +43,18 @@ class QLearningAgentEpsScheduling(QLearningAgent):
         action = self.legal_actions[0]
 
         # BEGIN SOLUTION
+        # Linearly decay epsilon over time
+        epsilon_decay_rate = (self.epsilon_start - self.epsilon_end) / self.epsilon_decay_steps
+        self.epsilon = max(self.epsilon_end, self.epsilon_start - epsilon_decay_rate * self.timestep)
+
+        # Increment timestep for epsilon scheduling
+        self.timestep += 1
+
+        # Epsilon-greedy policy: explore with probability epsilon, otherwise exploit
+        if random.uniform(0, 1) < self.epsilon:
+            action = random.choice(self.legal_actions)  # Exploration
+        else:
+            action = self.get_best_action(state)  # Exploitation
         # END SOLUTION
 
         return action
