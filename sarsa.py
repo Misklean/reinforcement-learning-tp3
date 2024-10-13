@@ -4,12 +4,10 @@ import typing as t
 import numpy as np
 import gymnasium as gym
 
-
 Action = int
 State = int
 Info = t.TypedDict("Info", {"prob": float, "action_mask": np.ndarray})
 QValues = t.DefaultDict[int, t.DefaultDict[Action, float]]
-
 
 class SarsaAgent:
     def __init__(
@@ -27,6 +25,7 @@ class SarsaAgent:
         self._qvalues: QValues = defaultdict(lambda: defaultdict(int))
         self.learning_rate = learning_rate
         self.gamma = gamma
+        self.epsilon = 0.05
 
     def get_qvalue(self, state: State, action: Action) -> float:
         """

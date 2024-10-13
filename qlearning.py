@@ -64,14 +64,7 @@ class QLearningAgent:
         """
         q_value = 0.0
         # BEGIN SOLUTION
-        # Compute the TD target: R_{t+1} + gamma * max_a' Q(S_{t+1}, a')
-        td_target = reward + self.gamma * self.get_value(next_state)
-        
-        # Compute the TD error: TD_target - Q(S_t, A_t)
-        td_error = td_target - self.get_value(state)
-        
-        # Update the Q-value using the learning rate: Q(S_t, A_t) + alpha * TD_error
-        q_value = self.get_value(state) + self.learning_rate * td_error
+        q_value = self.get_value(state) + self.learning_rate * (reward + self.gamma * self.get_value(next_state) - self.get_value(state))
         # END SOLUTION
 
         self.set_qvalue(state, action, q_value)
