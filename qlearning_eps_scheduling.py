@@ -8,8 +8,8 @@ class QLearningAgentEpsScheduling(QLearningAgent):
         self,
         *args,
         epsilon_start: float = 1.0,
-        epsilon_end: float = 0.05,
-        epsilon_decay_steps: int = 10000,
+        epsilon_end: float = 0.001,
+        epsilon_decay_steps: int = 20000,
         **kwargs,
     ):
         """

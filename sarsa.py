@@ -25,7 +25,7 @@ class SarsaAgent:
         self._qvalues: QValues = defaultdict(lambda: defaultdict(int))
         self.learning_rate = learning_rate
         self.gamma = gamma
-        self.epsilon = 0.05
+        self.epsilon = 0.001
 
     def get_qvalue(self, state: State, action: Action) -> float:
         """
