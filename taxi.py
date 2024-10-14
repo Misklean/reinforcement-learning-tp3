@@ -101,7 +101,6 @@ for i in range(1000):
 
 assert np.mean(rewards[-100:]) > 0.0
 
-
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
 #################################################
